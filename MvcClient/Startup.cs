@@ -30,7 +30,7 @@ namespace MvcClient
                         options.DefaultScheme = "Cookies";
                         options.DefaultChallengeScheme = "oidc";
                     })
-                    .AddCookie()
+                    .AddCookie("Cookies")
                     .AddOpenIdConnect("oidc", options =>
                     {
                         options.Authority = "https://localhost:5001"; // trusted server
@@ -38,6 +38,7 @@ namespace MvcClient
                         options.ClientSecret = "secret";
                         options.ResponseType = "code";
                         options.SaveTokens = true;
+                        options.Scope.Add("api1");
                     })
                     ;
         }
