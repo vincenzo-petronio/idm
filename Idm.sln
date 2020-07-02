@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationServer", "AuthorizationServer\AuthorizationServer.csproj", "{AB9B4440-F6F2-4691-AF11-2C7A5524A009}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServer", "AuthorizationServer\AuthorizationServer.csproj", "{AB9B4440-F6F2-4691-AF11-2C7A5524A009}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{7E72275E-F395-4077-8699-9FC9C832A2C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{7E72275E-F395-4077-8699-9FC9C832A2C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{D97FB4D4-ED1B-41D0-8E9A-5ED8970C2898}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{D97FB4D4-ED1B-41D0-8E9A-5ED8970C2898}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcClient", "MvcClient\MvcClient.csproj", "{44B5EAB4-048B-4C9A-A570-32220BFD6BF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcClient", "MvcClient\MvcClient.csproj", "{44B5EAB4-048B-4C9A-A570-32220BFD6BF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceOne", "ServiceOne\ServiceOne.csproj", "{BDBA83C4-0160-4855-A845-992432547ED1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,9 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AB9B4440-F6F2-4691-AF11-2C7A5524A009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -72,5 +71,23 @@ Global
 		{44B5EAB4-048B-4C9A-A570-32220BFD6BF6}.Release|x64.Build.0 = Release|Any CPU
 		{44B5EAB4-048B-4C9A-A570-32220BFD6BF6}.Release|x86.ActiveCfg = Release|Any CPU
 		{44B5EAB4-048B-4C9A-A570-32220BFD6BF6}.Release|x86.Build.0 = Release|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Debug|x64.Build.0 = Debug|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Debug|x86.Build.0 = Debug|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Release|x64.ActiveCfg = Release|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Release|x64.Build.0 = Release|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Release|x86.ActiveCfg = Release|Any CPU
+		{BDBA83C4-0160-4855-A845-992432547ED1}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {96B25E79-9DD4-4D58-9523-E2F9C56D04B1}
 	EndGlobalSection
 EndGlobal

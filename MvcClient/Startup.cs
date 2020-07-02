@@ -33,12 +33,13 @@ namespace MvcClient
                     .AddCookie("Cookies")
                     .AddOpenIdConnect("oidc", options =>
                     {
+                        options.SignInScheme = "Cookies";
                         options.Authority = "https://localhost:5001"; // trusted server
-                        options.ClientId = "mvc";
-                        options.ClientSecret = "secret";
+                        options.ClientId = "mvc-client";
+                        options.ClientSecret = "thisissostrongersecret";
                         options.ResponseType = "code";
                         options.SaveTokens = true;
-                        options.Scope.Add("api1");
+                        options.Scope.Add("user.basic");
                     })
                     ;
         }
@@ -66,11 +67,10 @@ namespace MvcClient
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapControllerRoute(
-                //    name: "default",
-                //    pattern: "{controller=Home}/{action=Index}/{id?}");
+                // così è a livello globale, altrimenti bisogna
+                // mettere [Authorize] su ogni controller
                 endpoints.MapDefaultControllerRoute()
-                    .RequireAuthorization();
+                    .RequireAuthorization(); 
             });
         }
     }

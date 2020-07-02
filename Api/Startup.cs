@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -22,8 +17,9 @@ namespace Api
             services.AddAuthentication("Bearer")
                     .AddJwtBearer("Bearer", options =>
                     {
+                        // Corrisponde al valore in API Resources dell'Identity Server.
                         options.Authority = "https://localhost:5001";
-
+                        options.Audience = "api1";
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             ValidateAudience = false
@@ -35,7 +31,7 @@ namespace Api
                 options.AddPolicy("ApiScope", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "api1");
+                    policy.RequireClaim("scope", "user.basic");
                 });
             });
         }

@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Api.Controllers
 {
-    [Route("api/idm")]
+    [Route("[controller]")]
     [Authorize]
     [ApiController]
     public class IdmController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get()
+        [Route("claims")] // idm/claims
+        public IActionResult GetClaims()
         {
             return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
         }
+
     }
 }

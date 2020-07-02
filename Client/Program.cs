@@ -12,36 +12,38 @@ namespace Client
         {
             Console.WriteLine("Hello Console!");
 
-            // Discovery Endpoint
+            // DISCO - Discovery Endpoint
             var client = new HttpClient();
             var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
             if (disco.IsError)
             {
                 Console.WriteLine(disco.Error);
+                Console.ReadKey(true);
                 return;
             }
 
-            // Request token
+            // Richiesta dell'AccessToken passando i parametri richiesti, usando il client M2M
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = disco.TokenEndpoint,
-                ClientId = "client",
-                ClientSecret = "secret",
-                Scope = "api1"
+                ClientId = "m2m-client",
+                ClientSecret = "thisissosecret",
+                Scope = "user.basic",
             });
             if (tokenResponse.IsError)
             {
                 Console.WriteLine(tokenResponse.Error);
+                Console.ReadKey(true);
                 return;
             }
             Console.WriteLine(tokenResponse.Json);
             Console.WriteLine("\n\n");
 
 
-            // call api
+            // Richiesta dell'API usando l'AccessToken come Authorization nell'header
             var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
-            var response = await apiClient.GetAsync("https://localhost:6001/api/idm");
+            var response = await apiClient.GetAsync("https://localhost:6001/idm/claims");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);

@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using IdentityServerHost.Quickstart.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,9 +29,10 @@ namespace AuthorizationServer
                     options.EmitStaticAudienceClaim = true;
                 })
                 .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryApiResources(Config.ApiResources)
                 .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryClients(Config.Clients)
-                .AddTestUsers(TestUsers.Users)
+                .AddTestUsers(Config.TestUsers)
                 ;
 
             // not recommended for production - you need to store your key material somewhere secure
@@ -49,7 +49,7 @@ namespace AuthorizationServer
             // uncomment if you want to add MVC
             app.UseStaticFiles();
             app.UseRouting();
-            
+
             app.UseIdentityServer();
 
             // uncomment, if you want to add MVC
