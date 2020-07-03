@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,19 +24,21 @@ namespace MvcClient
 
             services.AddAuthentication(options =>
                     {
-                        options.DefaultScheme = "Cookies";
-                        options.DefaultChallengeScheme = "oidc";
+                        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                        options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
                     })
-                    .AddCookie("Cookies")
-                    .AddOpenIdConnect("oidc", options =>
+                    .AddCookie()
+                    .AddOpenIdConnect(options =>
                     {
-                        options.SignInScheme = "Cookies";
+                        options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                         options.Authority = "https://localhost:5001"; // trusted server
                         options.ClientId = "mvc-client";
                         options.ClientSecret = "thisissostrongersecret";
                         options.ResponseType = "code";
                         options.SaveTokens = true;
                         options.Scope.Add("user.basic");
+                        // Mostra anche i Claim
+                        options.GetClaimsFromUserInfoEndpoint = true;
                     })
                     ;
         }
@@ -70,7 +69,7 @@ namespace MvcClient
                 // così è a livello globale, altrimenti bisogna
                 // mettere [Authorize] su ogni controller
                 endpoints.MapDefaultControllerRoute()
-                    .RequireAuthorization(); 
+                    .RequireAuthorization();
             });
         }
     }

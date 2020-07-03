@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MvcClient.Models;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace MvcClient.Controllers
 {
@@ -41,9 +40,10 @@ namespace MvcClient.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Logout()
+        public async Task Logout()
         {
-            return SignOut("Cookies", "oidc");
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
         }
 
         public async Task<IActionResult> GetIdmClaims()
@@ -55,7 +55,7 @@ namespace MvcClient.Controllers
             // chiama l'API con la risorsa desiderata.
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var content = await client.GetStringAsync("https://localhost:6001/idm/claims");
+            var content = await client.GetStringAsync("https://localhost:6200/claims");
 
             // mostriamo nella pagina web quello che nel client CLI veniva mostrato sulla console.
             ViewBag.Json = JArray.Parse(content).ToString();

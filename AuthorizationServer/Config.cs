@@ -1,11 +1,6 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-
-using IdentityServer4;
+﻿using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
@@ -33,8 +28,8 @@ namespace AuthorizationServer
         {
             // Le resources è tutto ciò che è possibile proteggere con l'Identity Server.
 
-            new ApiResource("service_one", "microservices one"),
-            new ApiResource("api1", "microservices two"),
+            new ApiResource("service_one", "microservice one"),
+            new ApiResource("service_two", "microservice two"),
         };
 
         /// <summary>
@@ -53,8 +48,6 @@ namespace AuthorizationServer
             new ApiScope("user.basic", "user with basic privileges"),
         };
 
-
-
         /// <summary>
         /// API Clients
         /// </summary>
@@ -67,6 +60,8 @@ namespace AuthorizationServer
             // un device, etc...
 
             // M2M machine to machine client for Client Code Flow
+            // Usato nella comunicazione server-server, senza intervento umano.
+            // Il client scambia ClientId e Secret per un AccessToken.
             new Client
             {
                 ClientId = "m2m-client", // unique ID
@@ -82,7 +77,11 @@ namespace AuthorizationServer
                 AllowedScopes = { "user.basic" },
             },
 
+
             // Request da POSTMAN
+            // Usato nella comunicazione da client sicuri.
+            // Il client scambia Username e Password dell'user per un AccessToken.
+            // I dati dell'user sono esposti al client, infatti non è un flow generalmente usato.
             new Client
             {
                 ClientId = "postman",
@@ -95,10 +94,17 @@ namespace AuthorizationServer
                 // ClientID & ClientSecret
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
-                AllowedScopes = { "api1" }
+                AllowedScopes = { "user.basic" }
             },
 
-            // Interactive ASP.NET UI client for Authorization Code Flow
+
+            // Interactive ASP.NET UI client for Authorization Code Flow.
+            // Usato nella comunicazione da web-app.
+            // - L'user accede al client MVC;
+            // - viene reindirizzato sulla login page dall'Identity Server;
+            // - inserisce username/password;
+            // - viene riportato indietro sul client MVC con un Code (esposto all'user!);
+            // - il client MVC scambia il code con un AccessToken (non esposto all'user!);
             new Client
             {
                 ClientId = "mvc-client",
@@ -135,6 +141,7 @@ namespace AuthorizationServer
                 Claims = new List<Claim>
                 {
                     new Claim("given_name", "Alice"),
+                    new Claim("role", "guest"),
                 }
             },
 
@@ -146,6 +153,7 @@ namespace AuthorizationServer
                 Claims = new List<Claim>
                 {
                     new Claim("given_name", "Administrator"),
+                    new Claim("role", "admin"),
                 }
             }
         };

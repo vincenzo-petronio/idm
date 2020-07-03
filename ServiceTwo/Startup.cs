@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ServiceOne
+namespace ServiceTwo
 {
     public class Startup
     {
@@ -33,7 +33,7 @@ namespace ServiceOne
                     {
                         // Corrisponde al valore in API Resources dell'Identity Server.
                         options.Authority = "https://localhost:5001";
-                        options.Audience = "service_one";
+                        options.Audience = "service_two";
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             ValidateAudience = false

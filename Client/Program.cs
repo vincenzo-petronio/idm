@@ -43,7 +43,32 @@ namespace Client
             // Richiesta dell'API usando l'AccessToken come Authorization nell'header
             var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
-            var response = await apiClient.GetAsync("https://localhost:6001/idm/claims");
+            // microservice 1
+            var response = await apiClient.GetAsync("https://localhost:6100/numbers/random");
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.StatusCode);
+            }
+            else
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(content);
+            }
+            Console.WriteLine("\n\n");
+            // microservice 2
+            response = await apiClient.GetAsync("https://localhost:6200/strings/hello");
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.StatusCode);
+            }
+            else
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(content);
+            }
+            Console.WriteLine("\n\n");
+            // microservice 2 - claims
+            response = await apiClient.GetAsync("https://localhost:6200/claims");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);
