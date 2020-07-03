@@ -84,7 +84,7 @@ namespace AuthorizationServer
             // I dati dell'user sono esposti al client, infatti non è un flow generalmente usato.
             new Client
             {
-                ClientId = "postman",
+                ClientId = "postman-client",
                 ClientName = "Postman client",
                 ClientSecrets =
                 {
@@ -125,6 +125,32 @@ namespace AuthorizationServer
                     IdentityServerConstants.StandardScopes.Profile,
                     "user.basic"
                 }
+            },
+
+
+            // SPA o Web/Mobile App for Hybrid Flow
+            // E' una combinazione tra Authorization Code e Implicit Flow.
+            new Client
+            {
+                ClientId = "spa-client",
+                ClientName = "SPA client with Blazor",
+                ClientSecrets = { new Secret("thisissostrongersecret".Sha512()) },
+
+                AllowedGrantTypes = GrantTypes.Hybrid,
+
+                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+
+                AllowOfflineAccess = true,
+
+                AllowedScopes = new List<string>
+                {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    "user.super"
+                },
+
+                Enabled = true,
             }
         };
 

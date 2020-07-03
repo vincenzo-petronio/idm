@@ -1,0 +1,25 @@
+﻿@page "/claims"
+
+@inject BlazorClient.Data.ClaimsService ClaimsService
+
+<h3>Claims</h3>
+
+@*<AuthorizeView>
+    <Authorized>
+        <p>@claims</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>No AuthZ!!!</p>
+    </NotAuthorized>
+</AuthorizeView>*@
+<p>@claims</p>
+
+@code {
+    private string claims;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        claims = await ClaimsService.GetClaims();
+    }
+}
