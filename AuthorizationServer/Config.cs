@@ -15,7 +15,9 @@ namespace AuthorizationServer
         /// </summary>
         public static IEnumerable<IdentityResource> IdentityResources => new IdentityResource[]
         {
-            // Sono informazioni relative all'utente che è possibile aggiungere nel token.
+            // Sono informazioni (claims) relative all'utente che è possibile inviare al client 
+            // per identificare un utente. Vengono inviate nell'ID Token attraverso il flusso
+            // OpenID Connect.
 
             new IdentityResources.OpenId(),     // Id univoco (sub)
             new IdentityResources.Profile(),    // info aggiuntive sul profilo
@@ -27,6 +29,7 @@ namespace AuthorizationServer
         public static IEnumerable<ApiResource> ApiResources => new ApiResource[]
         {
             // Le resources è tutto ciò che è possibile proteggere con l'Identity Server.
+            // Generalmente sono le API.
 
             new ApiResource("service_one", "microservice one"),
             new ApiResource("service_two", "microservice two"),
@@ -128,18 +131,19 @@ namespace AuthorizationServer
             },
 
 
-            // SPA o Web/Mobile App for Hybrid Flow
+            // SPA o Web/Mobile App for Authorization Code Flow with PKCE (Hybrid ???)
             // E' una combinazione tra Authorization Code e Implicit Flow.
             new Client
             {
                 ClientId = "spa-client",
-                ClientName = "SPA client with Blazor",
+                ClientName = "SPA client",
                 ClientSecrets = { new Secret("thisissostrongersecret".Sha512()) },
 
-                AllowedGrantTypes = GrantTypes.Hybrid,
+                AllowedGrantTypes = GrantTypes.Code,
+                RequirePkce = true, // il client genera una stringa random, l'hash 256 rappresenta il code_challenge
 
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                RedirectUris = { "https://localhost:5003/signin-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:5003/signout-callback-oidc" },
 
                 AllowOfflineAccess = true,
 
@@ -166,6 +170,8 @@ namespace AuthorizationServer
                 Password = "alice",
                 Claims = new List<Claim>
                 {
+                    // Un claim è una coppia chiave-valore, e rappresenta quello
+                    // che il soggetto è, non quello che il soggetto può fare.
                     new Claim("given_name", "Alice"),
                     new Claim("role", "guest"),
                 }

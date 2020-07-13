@@ -19,11 +19,14 @@
 <body>
 
     @{
-        var accessToken = await HttpContext.GetTokenAsync("access_token");
+        var initialAppState = new BlazorClient.Data.InitialAppState
+        {
+            AccessToken = await HttpContext.GetTokenAsync("access_token"),
+        };
     }
 
     <app>
-        <component type="typeof(App)" param-AccessToken="accessToken" render-mode="ServerPrerendered" />
+        <component type="typeof(App)" param-InitialApplicationState="initialAppState" render-mode="ServerPrerendered" />
     </app>
 
     <div id="blazor-error-ui">

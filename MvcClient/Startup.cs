@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace MvcClient
 {
@@ -34,7 +35,7 @@ namespace MvcClient
                         options.Authority = "https://localhost:5001"; // trusted server
                         options.ClientId = "mvc-client";
                         options.ClientSecret = "thisissostrongersecret";
-                        options.ResponseType = "code";
+                        options.ResponseType = OpenIdConnectResponseType.Code;
                         options.SaveTokens = true;
                         options.Scope.Add("user.basic");
                         // Mostra anche i Claim

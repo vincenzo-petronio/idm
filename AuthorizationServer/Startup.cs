@@ -50,6 +50,7 @@ namespace AuthorizationServer
             app.UseStaticFiles();
             app.UseRouting();
 
+            // IdentityServer4
             app.UseIdentityServer();
 
             // uncomment, if you want to add MVC

@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using BlazorClient.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Threading.Tasks;
 
 namespace BlazorClient
 {
@@ -47,13 +45,33 @@ namespace BlazorClient
                     options.Authority = "https://localhost:5001"; // trusted server
                     options.ClientId = "spa-client";
                     options.ClientSecret = "thisissostrongersecret";
-                    options.ResponseType = "code";
+                    options.ResponseType = OpenIdConnectResponseType.Code; // hybrid flow
                     options.SaveTokens = true;
                     options.Scope.Add("user.super");
                     // Mostra anche i Claim
                     options.GetClaimsFromUserInfoEndpoint = true;
+
+                    options.Events = new OpenIdConnectEvents
+                    {
+                        OnAccessDenied = context =>
+                        {
+                            context.HandleResponse();
+                            context.Response.Redirect("/");
+                            return Task.CompletedTask;
+                        }
+                    };
                 })
                 ;
+
+            services.AddMvcCore(options =>
+            {
+                var policyBuilder = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build()
+                ;
+
+                options.Filters.Add(new AuthorizeFilter(policyBuilder));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,15 +91,16 @@ namespace BlazorClient
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseAuthentication();
+            
             app.UseRouting();
 
-            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub()
-                    .RequireAuthorization()
+                    //.RequireAuthorization()
                     ;
                 endpoints.MapFallbackToPage("/_Host");
             });
