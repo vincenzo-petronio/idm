@@ -4,18 +4,22 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace AuthorizationServer
 {
     public class Startup
     {
         public IWebHostEnvironment Environment { get; }
+        private IConfiguration Configuration { get; }
 
-        public Startup(IWebHostEnvironment environment)
+        public Startup(IWebHostEnvironment environment, IConfiguration configuration)
         {
             Environment = environment;
+            Configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -28,10 +32,22 @@ namespace AuthorizationServer
                     // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
                     options.EmitStaticAudienceClaim = true;
                 })
-                .AddInMemoryIdentityResources(Config.IdentityResources)
-                .AddInMemoryApiResources(Config.ApiResources)
-                .AddInMemoryApiScopes(Config.ApiScopes)
-                .AddInMemoryClients(Config.Clients)
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = optionsBuilder =>
+                        //optionsBuilder.UseCosmos(     // COSMOSDB
+                        //    "",
+                        //    "",
+                        //    ""
+                        //);
+                        optionsBuilder.UseSqlServer(    // SQLSERVER
+                            Configuration.GetConnectionString("SqlServerDatabase")
+                        );
+                })
+                //.AddInMemoryIdentityResources(Config.IdentityResources)
+                //.AddInMemoryApiResources(Config.ApiResources)
+                //.AddInMemoryApiScopes(Config.ApiScopes)
+                //.AddInMemoryClients(Config.Clients)
                 .AddTestUsers(Config.TestUsers)
                 ;
 
