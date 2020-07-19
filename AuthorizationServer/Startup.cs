@@ -44,10 +44,10 @@ namespace AuthorizationServer
                             Configuration.GetConnectionString("SqlServerDatabase")
                         );
                 })
-                //.AddInMemoryIdentityResources(Config.IdentityResources)
-                //.AddInMemoryApiResources(Config.ApiResources)
-                //.AddInMemoryApiScopes(Config.ApiScopes)
                 //.AddInMemoryClients(Config.Clients)
+                //.AddInMemoryIdentityResources(Config.IdentityResources)
+                //.AddInMemoryApiScopes(Config.ApiScopes)
+                //.AddInMemoryApiResources(Config.ApiResources)
                 .AddTestUsers(Config.TestUsers)
                 ;
 

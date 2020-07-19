@@ -18,13 +18,17 @@ namespace AuthorizationServer
             // Sono informazioni (claims) relative all'utente che è possibile inviare al client 
             // per identificare un utente. Vengono inviate nell'ID Token attraverso il flusso
             // OpenID Connect.
+            // Il client può richiederle attraverso AllowedScopes.
 
             new IdentityResources.OpenId(),     // Id univoco (sub)
             new IdentityResources.Profile(),    // info aggiuntive sul profilo
+
+            // Oltre a quelli specificati dallo standard OpenId Connect,
+            // se ne possono definire altri a piacere.
         };
 
         /// <summary>
-        /// API Resource
+        /// API Resources
         /// </summary>
         public static IEnumerable<ApiResource> ApiResources => new ApiResource[]
         {
@@ -40,7 +44,7 @@ namespace AuthorizationServer
         /// </summary>
         public static IEnumerable<ApiScope> ApiScopes => new ApiScope[]
         {
-            // Gli scope rappresentano ciò che è possibile fare con le API,
+            // Gli scope rappresentano ciò che è possibile fare con le API Resource,
             // esempio è possibile definire uno scope privilegiato per accedere 
             // in Read/Write, e uno scope base per accedere solo in Read.
 
@@ -174,7 +178,7 @@ namespace AuthorizationServer
                     // che il soggetto è, non quello che il soggetto può fare.
                     new Claim("given_name", "Alice"),
                     new Claim("role", "guest"),
-                }
+                },
             },
 
             new TestUser
