@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
 
 namespace AuthorizationServer
 {
@@ -32,22 +33,22 @@ namespace AuthorizationServer
                     // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
                     options.EmitStaticAudienceClaim = true;
                 })
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = optionsBuilder =>
-                        //optionsBuilder.UseCosmos(     // COSMOSDB
-                        //    "",
-                        //    "",
-                        //    ""
-                        //);
-                        optionsBuilder.UseSqlServer(    // SQLSERVER
-                            Configuration.GetConnectionString("SqlServerDatabase")
-                        );
-                })
-                //.AddInMemoryClients(Config.Clients)
-                //.AddInMemoryIdentityResources(Config.IdentityResources)
-                //.AddInMemoryApiScopes(Config.ApiScopes)
-                //.AddInMemoryApiResources(Config.ApiResources)
+                //.AddConfigurationStore(options =>
+                //{
+                //    options.ConfigureDbContext = optionsBuilder =>
+                //        //optionsBuilder.UseCosmos(     // COSMOSDB
+                //        //    "",
+                //        //    "",
+                //        //    ""
+                //        //);
+                //        optionsBuilder.UseSqlServer(    // SQLSERVER
+                //            Configuration.GetConnectionString("SqlServerDatabase")
+                //        );
+                //})
+                .AddInMemoryClients(Config.Clients)
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryApiScopes(Config.ApiScopes)
+                .AddInMemoryApiResources(Config.ApiResources)
                 .AddTestUsers(Config.TestUsers)
                 ;
 

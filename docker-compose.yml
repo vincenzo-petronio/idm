@@ -1,0 +1,65 @@
+version: '3.8'
+services:
+    idmserver:
+        build:
+            context: ./AuthorizationServer
+        container_name: container_idmserver
+        ports:
+            - '5000:80'
+            # - '5001:443'
+        image: img_idmserver
+
+    api:
+        build:
+            context: ./Api
+        container_name: container_apigtw
+        ports:
+            - '16000:80'
+            # - '16001:443'
+        image: img_apigtw
+        # depends_on:
+        #     - idmserver
+
+    mvcclient:
+        build:
+            context: ./MvcClient
+        container_name: container_mvcclient
+        ports:
+            - '15000:80'
+            # - '15001:443'
+        image: img_mvcclient
+        # depends_on:
+        #     - api
+
+    spaclient:
+        build:
+            context: ./BlazorClient
+        container_name: container_spaclient
+        ports:
+            - '15002:80'
+            # - '15003:443'
+        image: img_spaclient
+        # depends_on:
+        #     - api
+
+    service1:
+        build:
+            context: ./ServiceOne
+        container_name: container_service1
+        ports:
+            - '15100:80'
+            # - '15101:443'
+        image: img_service1
+        depends_on:
+            - api
+    
+    service2:
+        build:
+            context: ./ServiceTwo
+        container_name: container_service2
+        ports:
+            - '15200:80'
+            # - '15201:443'
+        image: img_service2
+        depends_on:
+            - api

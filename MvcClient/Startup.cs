@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace MvcClient
@@ -21,6 +23,8 @@ namespace MvcClient
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+
             services.AddControllersWithViews();
 
             services.AddAuthentication(options =>
@@ -32,14 +36,18 @@ namespace MvcClient
                     .AddOpenIdConnect(options =>
                     {
                         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                        options.Authority = "https://localhost:5001"; // trusted server
+                        options.Authority = "http://host.docker.internal:5000"; // trusted server
+                        options.RequireHttpsMetadata = false; // HTTP!!!
                         options.ClientId = "mvc-client";
                         options.ClientSecret = "thisissostrongersecret";
                         options.ResponseType = OpenIdConnectResponseType.Code;
+                        options.UsePkce = true;
+                        options.ResponseMode = OpenIdConnectResponseMode.Query;
                         options.SaveTokens = true;
-                        options.Scope.Add("user.basic");
+                        //options.Scope.Add("user.basic");
                         // Mostra anche i Claim
                         options.GetClaimsFromUserInfoEndpoint = true;
+                        //options.CallbackPath = new PathString("/signin-oidc");
                     })
                     ;
         }
@@ -57,7 +65,7 @@ namespace MvcClient
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -70,7 +78,8 @@ namespace MvcClient
                 // così è a livello globale, altrimenti bisogna
                 // mettere [Authorize] su ogni controller
                 endpoints.MapDefaultControllerRoute()
-                    .RequireAuthorization();
+                    .RequireAuthorization()
+                    ;
             });
         }
     }

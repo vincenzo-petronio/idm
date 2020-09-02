@@ -21,7 +21,7 @@ namespace BlazorClient.Data
             httpClient = clientFactory.CreateClient();
         }
 
-        public async Task<string> GetClaims()
+        public async Task<string> GetIdmClaims()
         {
             // Richiesta dell'AccessToken
             var accessToken = tokenProvider.AccessToken;
@@ -29,7 +29,7 @@ namespace BlazorClient.Data
             // Si passa l'Authorization nell'header e si chiama l'API con la risorsa desiderata.
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var content = await client.GetStringAsync("https://localhost:6200/claims");
+            var content = await client.GetStringAsync("http://host.docker.internal:16000/idm/claims");
 
             // mostriamo nella pagina web quello che nel client CLI veniva mostrato sulla console.
             return JArray.Parse(content).ToString();

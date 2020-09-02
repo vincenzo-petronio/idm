@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MvcClient.Models;
@@ -55,7 +56,7 @@ namespace MvcClient.Controllers
             // chiama l'API con la risorsa desiderata.
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var content = await client.GetStringAsync("https://localhost:6200/claims");
+            var content = await client.GetStringAsync("http://host.docker.internal:16000/idm/claims");
 
             // mostriamo nella pagina web quello che nel client CLI veniva mostrato sulla console.
             ViewBag.Json = JArray.Parse(content).ToString();

@@ -2,21 +2,22 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
+ENV ASPNETCORE_ENVIRONMENT="Development"
 EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["BlazorClient.csproj", "./"]
-RUN dotnet restore 
+COPY ["AuthorizationServer.csproj", "./"]
+RUN dotnet restore
 COPY . .
-#WORKDIR "/src/BlazorClient"
-RUN dotnet build "BlazorClient.csproj" -c Release -o /app/build
+#WORKDIR "/src/AuthorizationServer"
+RUN dotnet build "AuthorizationServer.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "BlazorClient.csproj" -c Release -o /app/publish
+RUN dotnet publish "AuthorizationServer.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "BlazorClient.dll"]
+ENTRYPOINT ["dotnet", "AuthorizationServer.dll"]

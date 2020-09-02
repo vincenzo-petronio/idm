@@ -119,19 +119,28 @@ namespace AuthorizationServer
                 ClientSecrets = { new Secret("thisissostrongersecret".Sha512()) },
 
                 AllowedGrantTypes = GrantTypes.Code,
+                RequirePkce = true,
 
                 // where to redirect to after login
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                RedirectUris =
+                {
+                    "http://localhost:15000/signin-oidc",
+                    "http://host.docker.internal:15000/signin-oidc",
+                },
 
                 // where to redirect to after logout
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                PostLogoutRedirectUris = { "http://localhost:15000/signout-callback-oidc" },
 
                 AllowedScopes = new List<string>
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    "user.basic"
-                }
+                    //"user.basic"
+                },
+
+                AllowOfflineAccess = true,
+
+                RequireConsent = true,
             },
 
 
@@ -146,8 +155,12 @@ namespace AuthorizationServer
                 AllowedGrantTypes = GrantTypes.Code,
                 RequirePkce = true, // il client genera una stringa random, l'hash 256 rappresenta il code_challenge
 
-                RedirectUris = { "https://localhost:5003/signin-oidc" },
-                PostLogoutRedirectUris = { "https://localhost:5003/signout-callback-oidc" },
+                RedirectUris =
+                {
+                    "http://localhost:15002/signin-oidc",
+                    "http://host.docker.internal:15002/signin-oidc"
+                },
+                PostLogoutRedirectUris = { "http://localhost:15002/signout-callback-oidc" },
 
                 AllowOfflineAccess = true,
 
@@ -155,7 +168,7 @@ namespace AuthorizationServer
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    "user.super"
+                    //"user.super"
                 },
 
                 Enabled = true,

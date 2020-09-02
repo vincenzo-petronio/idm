@@ -20,6 +20,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        claims = await ClaimsService.GetClaims();
+        claims = await ClaimsService.GetIdmClaims();
     }
 }

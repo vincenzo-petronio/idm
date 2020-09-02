@@ -14,7 +14,11 @@ namespace Client
 
             // DISCO - Discovery Endpoint
             var client = new HttpClient();
-            var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
+            var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = "http://host.docker.internal:5000",
+                Policy = { RequireHttps = false }
+            });
             if (disco.IsError)
             {
                 Console.WriteLine(disco.Error);
@@ -44,7 +48,7 @@ namespace Client
             var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
             // microservice 1
-            var response = await apiClient.GetAsync("https://localhost:6100/numbers/random");
+            var response = await apiClient.GetAsync("http://localhost:15100/numbers/random");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);
@@ -56,7 +60,7 @@ namespace Client
             }
             Console.WriteLine("\n\n");
             // microservice 2
-            response = await apiClient.GetAsync("https://localhost:6200/strings/hello");
+            response = await apiClient.GetAsync("http://localhost:15200/strings/hello");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);
@@ -68,7 +72,7 @@ namespace Client
             }
             Console.WriteLine("\n\n");
             // microservice 2 - claims
-            response = await apiClient.GetAsync("https://localhost:6200/claims");
+            response = await apiClient.GetAsync("http://localhost:15200/claims");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);

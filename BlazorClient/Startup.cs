@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Threading.Tasks;
 
@@ -26,6 +27,8 @@ namespace BlazorClient
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
@@ -42,12 +45,14 @@ namespace BlazorClient
                 .AddOpenIdConnect(options =>
                 {
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.Authority = "https://localhost:5001"; // trusted server
+                    options.Authority = "http://host.docker.internal:5000"; // trusted server
+                    options.RequireHttpsMetadata = false;
                     options.ClientId = "spa-client";
                     options.ClientSecret = "thisissostrongersecret";
                     options.ResponseType = OpenIdConnectResponseType.Code; // hybrid flow
+                    options.UsePkce = true;
                     options.SaveTokens = true;
-                    options.Scope.Add("user.super");
+                    //options.Scope.Add("user.super");
                     // Mostra anche i Claim
                     options.GetClaimsFromUserInfoEndpoint = true;
 
@@ -66,9 +71,9 @@ namespace BlazorClient
             services.AddMvcCore(options =>
             {
                 var policyBuilder = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .Build()
-                ;
+                    .RequireAuthenticatedUser()
+                    .Build()
+                    ;
 
                 options.Filters.Add(new AuthorizeFilter(policyBuilder));
             });
@@ -92,7 +97,7 @@ namespace BlazorClient
             app.UseStaticFiles();
 
             app.UseAuthentication();
-            
+
             app.UseRouting();
 
             app.UseAuthorization();

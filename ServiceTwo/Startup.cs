@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ServiceTwo
@@ -26,13 +20,17 @@ namespace ServiceTwo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+
             services.AddControllers();
 
             services.AddAuthentication("Bearer")
                     .AddJwtBearer("Bearer", options =>
                     {
                         // Corrisponde al valore in API Resources dell'Identity Server.
-                        options.Authority = "https://localhost:5001";
+                        options.Authority = "http://host.docker.internal:5000";
+                        options.RequireHttpsMetadata = false;
+
                         options.Audience = "service_two";
                         options.TokenValidationParameters = new TokenValidationParameters
                         {

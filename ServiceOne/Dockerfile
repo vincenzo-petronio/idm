@@ -2,15 +2,16 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
+ENV ASPNETCORE_ENVIRONMENT="Development"
 EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["ServiceOne/ServiceOne.csproj", "ServiceOne/"]
-RUN dotnet restore "ServiceOne/ServiceOne.csproj"
+COPY ["ServiceOne.csproj", "./"]
+RUN dotnet restore 
 COPY . .
-WORKDIR "/src/ServiceOne"
+#WORKDIR "/src/ServiceOne"
 RUN dotnet build "ServiceOne.csproj" -c Release -o /app/build
 
 FROM build AS publish
