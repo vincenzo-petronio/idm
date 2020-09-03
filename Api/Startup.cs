@@ -1,9 +1,13 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Api
 {
@@ -22,11 +26,27 @@ namespace Api
                     {
                         options.Authority = "http://host.docker.internal:5000";
                         options.RequireHttpsMetadata = false;
-                        // Corrisponde al valore in API Resources dell'Identity Server.
-                        //options.Audience = "api1";
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
-                            ValidateAudience = false
+                            ValidateIssuer = true,
+
+                            ValidateAudience = true,
+                            // Corrisponde al valore in API Resources dell'Identity Server.
+                            ValidAudiences = new List<string> { "api_gtw" },
+                        };
+
+                        options.Events = new JwtBearerEvents()
+                        {
+                            OnAuthenticationFailed = ctx =>
+                            {
+                                Console.WriteLine(ctx.Exception);
+                                return Task.CompletedTask;
+                            },
+                            OnForbidden = ctx =>
+                            {
+                                Console.WriteLine(ctx.Response.StatusCode);
+                                return Task.CompletedTask;
+                            },
                         };
                     });
 

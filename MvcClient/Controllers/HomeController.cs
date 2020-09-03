@@ -49,8 +49,11 @@ namespace MvcClient.Controllers
 
         public async Task<IActionResult> GetIdmClaims()
         {
-            // Richiesta dell'AccessToken
+            // Richiesta dell'access_token (specifico di OAuth2)
             var accessToken = await HttpContext.GetTokenAsync("access_token");
+
+            // Richiesta dell'id_token (specifico di OpenID)
+            //var idToken = await HttpContext.GetTokenAsync("id_token");
 
             // Esattamente come il client CLI, si passa l'Authorization nell'header e si
             // chiama l'API con la risorsa desiderata.

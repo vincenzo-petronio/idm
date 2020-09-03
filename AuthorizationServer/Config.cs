@@ -1,6 +1,7 @@
 ﻿using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
+using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
 using System.Security.Claims;
 
@@ -37,6 +38,10 @@ namespace AuthorizationServer
 
             new ApiResource("service_one", "microservice one"),
             new ApiResource("service_two", "microservice two"),
+            new ApiResource("api_gtw", "API Gateway")
+            {
+                Scopes = { "user.basic" }
+            },
         };
 
         /// <summary>
@@ -135,7 +140,8 @@ namespace AuthorizationServer
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    //"user.basic"
+
+                    "user.basic",
                 },
 
                 AllowOfflineAccess = true,

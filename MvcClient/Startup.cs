@@ -44,7 +44,7 @@ namespace MvcClient
                         options.UsePkce = true;
                         options.ResponseMode = OpenIdConnectResponseMode.Query;
                         options.SaveTokens = true;
-                        //options.Scope.Add("user.basic");
+                        options.Scope.Add("user.basic");
                         // Mostra anche i Claim
                         options.GetClaimsFromUserInfoEndpoint = true;
                         //options.CallbackPath = new PathString("/signin-oidc");
