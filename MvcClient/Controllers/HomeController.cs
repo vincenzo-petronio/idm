@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
@@ -6,9 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MvcClient.Models;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MvcClient.Controllers
@@ -47,6 +51,7 @@ namespace MvcClient.Controllers
             await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
         }
 
+        // Interroga l'API GTW passando l'access_token.
         public async Task<IActionResult> GetIdmClaims()
         {
             // Richiesta dell'access_token (specifico di OAuth2)
@@ -63,6 +68,69 @@ namespace MvcClient.Controllers
 
             // mostriamo nella pagina web quello che nel client CLI veniva mostrato sulla console.
             ViewBag.Json = JArray.Parse(content).ToString();
+            return View("Claims");
+        }
+
+        // Interroga l'API GTW che a sua volta interroga il µService1, passando l'access_token.
+        public async Task<IActionResult> GetRandomNumberFromService()
+        {
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var content = await client.GetStringAsync("http://host.docker.internal:16000/services/numbers/random");
+
+            ViewBag.Json = content;
+            return View("Claims");
+        }
+
+        // Interroga l'API GTW che a sua volta interroga il µService2, passando l'access_token.
+        public async Task<IActionResult> GetStringHelloFromService()
+        {
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var content = await client.GetStringAsync("http://host.docker.internal:16000/services/strings/hello");
+
+            ViewBag.Json = content;
+            return View("Claims");
+        }
+
+        // Interroga direttamente il µService2 passando l'access_token.
+        public async Task<IActionResult> GetStringVersionFromService()
+        {
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            //var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            //{
+            //    Address = "http://host.docker.internal:5000",
+            //    Policy = { RequireHttps = false }
+            //});
+
+            //var userInfo = await client.GetUserInfoAsync(new UserInfoRequest
+            //{
+            //    Address = disco.UserInfoEndpoint,
+            //    Token = accessToken
+            //});
+
+            //var email = userInfo.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Email));
+
+            //foreach (var c in userInfo.Claims)
+            //{
+            //    Console.WriteLine("###### HomeCtrl ######## " + c.Value);
+            //}
+            //Console.WriteLine(disco.UserInfoEndpoint);
+            //Console.WriteLine(email);
+
+            var content = await client.GetStringAsync("http://host.docker.internal:15200/strings/version");
+
+            ViewBag.Json = content;
             return View("Claims");
         }
     }

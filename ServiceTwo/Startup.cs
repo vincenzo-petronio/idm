@@ -38,7 +38,13 @@ namespace ServiceTwo
                         };
                     });
 
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("OnlyItDomain", policy =>
+                {
+                    policy.Requirements.Add(new OnlyItDomainRequirement());
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

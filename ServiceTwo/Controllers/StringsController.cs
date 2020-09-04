@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -23,6 +20,14 @@ namespace ServiceTwo.Controllers
         public string GetHello()
         {
             return "Hello Service Two!";
+        }
+
+        [HttpGet]
+        [Route("version")]
+        [Authorize("OnlyItDomain")]
+        public string GetVersion()
+        {
+            return "0.0.1";
         }
     }
 }

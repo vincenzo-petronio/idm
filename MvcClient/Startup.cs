@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Security.Claims;
 
 namespace MvcClient
 {
@@ -47,7 +49,7 @@ namespace MvcClient
                         options.Scope.Add("user.basic");
                         // Mostra anche i Claim
                         options.GetClaimsFromUserInfoEndpoint = true;
-                        //options.CallbackPath = new PathString("/signin-oidc");
+                        //options.ClaimActions.MapUniqueJsonKey(ClaimTypes.Email, "email");
                     })
                     ;
         }

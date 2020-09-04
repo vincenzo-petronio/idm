@@ -26,6 +26,7 @@ namespace AuthorizationServer
 
             // Oltre a quelli specificati dallo standard OpenId Connect,
             // se ne possono definire altri a piacere.
+            //new IdentityResource("roles", "user role", new List<string>{ "role" }),
         };
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace AuthorizationServer
             new ApiResource("service_two", "microservice two"),
             new ApiResource("api_gtw", "API Gateway")
             {
-                Scopes = { "user.basic" }
+                Scopes = { "user.basic" },
             },
         };
 
@@ -147,6 +148,9 @@ namespace AuthorizationServer
                 AllowOfflineAccess = true,
 
                 RequireConsent = true,
+
+                AlwaysSendClientClaims = true,
+                //AlwaysIncludeUserClaimsInIdToken = true,
             },
 
 
@@ -195,8 +199,9 @@ namespace AuthorizationServer
                 {
                     // Un claim è una coppia chiave-valore, e rappresenta quello
                     // che il soggetto è, non quello che il soggetto può fare.
-                    new Claim("given_name", "Alice"),
-                    new Claim("role", "guest"),
+                    new Claim(ClaimTypes.GivenName, "Alice"),
+                    new Claim(ClaimTypes.Role, "guest"),
+                    new Claim(ClaimTypes.Email, "alice@email.com"),
                 },
             },
 
@@ -207,8 +212,9 @@ namespace AuthorizationServer
                 Password = "admin",
                 Claims = new List<Claim>
                 {
-                    new Claim("given_name", "Administrator"),
-                    new Claim("role", "admin"),
+                    new Claim(ClaimTypes.GivenName, "Administrator"),
+                    new Claim(ClaimTypes.Role, "admin"),
+                    new Claim(ClaimTypes.Email, "admin@email.it"),
                 }
             }
         };
