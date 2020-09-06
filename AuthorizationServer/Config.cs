@@ -11,6 +11,16 @@ namespace AuthorizationServer
     {
         // Classe usata per la memorizzazione in-memory dei dati.
 
+        // Uno scope è una risorsa che un client tenta di accedere.
+        // In IdentityServer4 gli scope vengono modellati in due tipologie:
+        // - IdentityResource per indicare gli scope relativi all'utente 
+        // (es. email, last name, website, location, etc)
+        // - ApiResource per indicare gli scope relativi all'API
+        // (es. 'the calendar API' or 'read-only access to the calendar API')
+        // Se nasce la necessità di accedere ad una API ma anche ad un dato dell'utente,
+        // è possibile aggiungere la proprietà UserClaims nella definizione della 
+        // ApiResource
+
         /// <summary>
         /// Identity Resources
         /// </summary>
@@ -38,10 +48,19 @@ namespace AuthorizationServer
             // Generalmente sono le API.
 
             new ApiResource("service_one", "microservice one"),
-            new ApiResource("service_two", "microservice two"),
+            new ApiResource("service_two", "microservice two")
+            {
+                UserClaims = new List<string> { "role" }
+            },
             new ApiResource("api_gtw", "API Gateway")
             {
                 Scopes = { "user.basic" },
+
+                // Essendo ApiResource una modellazione dello Scope per OAuth2,
+                // l'aggiunta di un claim utente verrà inviata solo nell'access_token
+                // e non nell'id_token!
+                
+                //UserClaims = new List<string> { "role" }
             },
         };
 
@@ -150,7 +169,7 @@ namespace AuthorizationServer
                 RequireConsent = true,
 
                 AlwaysSendClientClaims = true,
-                //AlwaysIncludeUserClaimsInIdToken = true,
+                AlwaysIncludeUserClaimsInIdToken = true,
             },
 
 
