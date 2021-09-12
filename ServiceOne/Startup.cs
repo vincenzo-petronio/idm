@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,8 +25,8 @@ namespace ServiceOne
 
             services.AddControllers();
 
-            services.AddAuthentication("Bearer")
-                    .AddJwtBearer("Bearer", options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                     {
                         // Corrisponde al valore in API Resources dell'Identity Server.
                         options.Authority = "http://host.docker.internal:5000";
