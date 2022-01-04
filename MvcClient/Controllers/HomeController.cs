@@ -1,18 +1,12 @@
-﻿using IdentityModel.Client;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MvcClient.Models;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MvcClient.Controllers
@@ -67,7 +61,7 @@ namespace MvcClient.Controllers
             var content = await client.GetStringAsync("http://host.docker.internal:16000/idm/claims");
 
             // mostriamo nella pagina web quello che nel client CLI veniva mostrato sulla console.
-            ViewBag.Json = JArray.Parse(content).ToString();
+            ViewBag.Json = content;
             return View("Claims");
         }
 

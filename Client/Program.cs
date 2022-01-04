@@ -1,5 +1,4 @@
 ﻿using IdentityModel.Client;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -80,7 +79,7 @@ namespace Client
             else
             {
                 var content = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(JArray.Parse(content));
+                Console.WriteLine(content);
             }
 
             Console.ReadKey(true);

@@ -4,11 +4,9 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Http;
 
 namespace AuthorizationServer
 {
@@ -66,6 +64,11 @@ namespace AuthorizationServer
             // uncomment if you want to add MVC
             app.UseStaticFiles();
             app.UseRouting();
+
+            //app.UseCookiePolicy(new CookiePolicyOptions
+            //{
+            //    MinimumSameSitePolicy = SameSiteMode.Lax
+            //});
 
             // IdentityServer4
             app.UseIdentityServer();
