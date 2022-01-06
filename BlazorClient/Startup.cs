@@ -96,11 +96,13 @@ namespace BlazorClient
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            //app.UseCookiePolicy();
-            app.UseAuthentication();
-
             app.UseRouting();
 
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Lax
+            });
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

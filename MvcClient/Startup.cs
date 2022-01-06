@@ -27,13 +27,18 @@ namespace MvcClient
         {
             IdentityModelEventSource.ShowPII = true;
 
-            services.AddControllersWithViews();
-
             services.AddAuthentication(options =>
                     {
                         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                         options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
                     })
+                    //.AddCookie(options =>
+                    //{
+                    //    options.CookieManager = new ChunkingCookieManager();
+                    //    options.Cookie.HttpOnly = true;
+                    //    options.Cookie.SameSite = SameSiteMode.None;
+                    //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    //})
                     .AddCookie()
                     .AddOpenIdConnect(options =>
                     {
@@ -52,6 +57,8 @@ namespace MvcClient
                         //options.ClaimActions.MapUniqueJsonKey(ClaimTypes.Email, "email");
                     })
                     ;
+
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +79,10 @@ namespace MvcClient
 
             app.UseRouting();
 
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Lax
+            });
             app.UseAuthentication();
             app.UseAuthorization();
 
